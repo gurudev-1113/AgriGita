@@ -1,0 +1,19 @@
+{
+  "trained_at": "2026-04-23T15:37:34.157623",
+  "efficiency_weights": {
+    "1": 11.23,
+    "2": 164.45,
+    "3": 8.47,
+    "4": 134.98,
+    "5": 133.57,
+    "6": 7.72
+  },
+  "risk_params": {
+    "good": 0.02,
+    "warning": 0.15,
+    "damaged": 0.95
+  },
+  "daily_avg_usage": 5322.39,
+  "total_trained_on": 6,
+  "status": "optimized"
+}
