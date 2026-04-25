@@ -2,19 +2,45 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useSocket } from '../context/SocketContext'
 import { useLanguage } from '../context/LanguageContext'
+import { useWebTheme } from '../context/ThemeContext'
 import VoiceAssistant from './VoiceAssistant'
 import LiveChat from './LiveChat'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { alertAPI } from '../api/services'
 
 export default function Layout() {
+  const { isDarkMode, toggleTheme } = useWebTheme()
   const { user, logout } = useAuth()
   const { socket, connected } = useSocket()
   const { t } = useLanguage()
   const navigate = useNavigate()
   const [unreadCount, setUnreadCount] = useState(0)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [criticalAlert, setCriticalAlert] = useState(null)
+
+  // Determine if this is a mobile/drawer viewport
+  const isMobile = () => window.innerWidth <= 600
+  const isTablet = () => window.innerWidth > 600 && window.innerWidth <= 1024
+
+  // On mobile: sidebar starts closed (drawer). On desktop/tablet: starts open.
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile())
+
+  // Track mobile state for overlay
+  const [mobileView, setMobileView] = useState(isMobile())
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = isMobile()
+      setMobileView(mobile)
+      // On resize to desktop, re-open sidebar
+      if (!mobile && !isTablet()) {
+        setSidebarOpen(true)
+      } else if (mobile) {
+        setSidebarOpen(false)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     alertAPI.getUnreadCount().then(r => setUnreadCount(r.data.unread_count)).catch(() => {})
@@ -55,6 +81,11 @@ export default function Layout() {
   const handleLogout = () => { logout(); navigate('/login') }
   const initials = user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : user?.username?.[0]?.toUpperCase() || 'U'
 
+  const handleNavClick = () => {
+    // On mobile, close sidebar after navigating
+    if (isMobile()) setSidebarOpen(false)
+  }
+
   const navItems = [
     { to: '/', icon: '🛖', label: t('dashboard'), end: true },
     { to: '/valves', icon: '🚰', label: t('valves') },
@@ -63,133 +94,109 @@ export default function Layout() {
     { to: '/pipelines', icon: '〰️', label: t('pipelines') },
   ]
   const toolItems = [
+    { to: '/detection', icon: '🍃', label: t('plant_health') },
+    { to: '/orders', icon: '📦', label: t('my_orders') },
     { to: '/ai', icon: '🌱', label: t('ai_suggestions') },
     { to: '/alerts', icon: '📢', label: t('alerts'), showDot: unreadCount > 0 },
     { to: '/profile', icon: '🧑‍🌾', label: t('profile') },
-    { to: '/settings', icon: '⚙️', label: 'Settings' },
-    { to: '/admin', icon: '🛡️', label: 'Admin Panel' },
   ]
 
+  const toggleSidebar = () => setSidebarOpen(prev => !prev)
+
+  // On tablet, sidebar is also collapsible (drawer), so use overlay there too
+  const showOverlay = (mobileView || isTablet()) && sidebarOpen
+
   return (
-    <div className="app-layout">
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-brand">
-          <img src="/logo.png" alt="AgriGita Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-          <div className="sidebar-brand-text">
-            <h1>AgriGita</h1>
-            <span>Smart Agriculture</span>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <div className="nav-section-title">{t('main_menu')}</div>
-          {navItems.map(item => (
-            <NavLink key={item.to} to={item.to} end={item.end}
-              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => setSidebarOpen(false)}>
-              <span className="icon">{item.icon}</span>
-              {item.label}
-            </NavLink>
-          ))}
-
-          <div className="nav-section-title">{t('tools')}</div>
-          {toolItems.map(item => (
-            <NavLink key={item.to} to={item.to}
-              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => setSidebarOpen(false)}>
-              <span className="icon">{item.icon}</span>
-              {item.label}
-              {item.showDot && <span className="alert-dot" />}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="sidebar-user" onClick={handleLogout} title="Click to logout">
-            <div className="sidebar-user-avatar" style={{ overflow: 'hidden' }}>
-              {user?.profile_image ? (
-                <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                initials
-              )}
-            </div>
-            <div className="sidebar-user-info">
-              <div className="name">{user?.full_name || user?.username}</div>
-              <div className="role">
-                {connected ? '🟢 Online' : '🔴 Offline'}
-              </div>
-            </div>
-            <span style={{ fontSize: '1.1rem', cursor: 'pointer' }}>🚪</span>
-          </div>
-        </div>
-      </aside>
-
-      <div className="main-content">
-        <header className="header">
-          <button className="btn btn-icon btn-outline" onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ display: 'none' }} id="menu-toggle">☰</button>
-          <div className="header-title">AgriGita: AI-Powered Smart Agriculture</div>
-          <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div className="notification-badge" onClick={() => navigate('/alerts')} id="header-alerts">
-              🔔
-              {unreadCount > 0 && <span className="count">{unreadCount > 9 ? '9+' : unreadCount}</span>}
-            </div>
-            
-            <div 
-              style={{ width: '38px', height: '38px', borderRadius: '50%', backgroundColor: 'var(--bg-card-hover)', border: '2px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s', alignSelf: 'center' }}
-              onClick={() => navigate('/profile')}
-              title="View Profile"
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
-            >
-              {user?.profile_image ? (
-                <img src={user.profile_image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{initials}</span>
-              )}
-            </div>
-          </div>
-        </header>
-        <div className="page-content">
-          <Outlet />
-        </div>
-      </div>
-      <LiveChat />
+    <div className={`app-container ${isDarkMode ? 'dark' : 'light'}`}>
       <VoiceAssistant />
-
+      <LiveChat />
+      
       {criticalAlert && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          backgroundColor: 'rgba(2ef, 68, 68, 0.95)',
-          background: 'var(--gradient-amber)',
-          color: 'white',
-          padding: '16px 24px',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(239, 68, 68, 0.4)',
-          zIndex: 10000,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          animation: 'slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          cursor: 'pointer'
-        }} onClick={() => { setCriticalAlert(null); navigate('/alerts'); }}>
-          <span style={{ fontSize: '1.5rem', animation: 'pulse 1s infinite' }}>🚨</span>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem' }}>SYSTEM ALERT</div>
-            <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>{criticalAlert}</div>
-          </div>
+        <div className="critical-alert-banner">
+          <span className="blink">🔥</span> {criticalAlert}
         </div>
       )}
 
-      <style>{`
-        @keyframes slideDown {
-          from { top: -100px; opacity: 0; }
-          to { top: 20px; opacity: 1; }
-        }
-      `}</style>
+      {/* MOBILE / TABLET OVERLAY */}
+      {showOverlay && (
+        <div className="mobile-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside className={`sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
+        <div className="sidebar-brand">
+           <div className="sidebar-brand-icon" style={{ background: 'transparent', boxShadow: 'none' }}>
+             <img src="/logo.png" alt="AgriGita" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+           </div>
+           <div className="sidebar-brand-text">
+             <h1>AgriGita</h1>
+           </div>
+           <button className="close-mobile-sidebar" onClick={() => setSidebarOpen(false)}>✕</button>
+        </div>
+
+        <nav className="sidebar-nav">
+          <div className="nav-group">
+            <div className="nav-section-title">{t('main_menu')}</div>
+            {navItems.map(item => (
+              <NavLink key={item.to} to={item.to} end={item.end} className={({isActive}) => isActive ? "nav-item active" : "nav-item"} onClick={handleNavClick}>
+                <span className="icon">{item.icon}</span>
+                <span className="nav-label">{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
+
+          <div className="nav-group">
+            <div className="nav-section-title">{t('tools')}</div>
+            {toolItems.map(item => (
+              <NavLink key={item.to} to={item.to} className={({isActive}) => isActive ? "nav-item active" : "nav-item"} onClick={handleNavClick}>
+                <span className="icon">{item.icon}</span>
+                <span className="nav-label">{item.label}</span>
+                {item.showDot && <span className="alert-dot"></span>}
+              </NavLink>
+            ))}
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="sidebar-user" onClick={handleLogout} style={{width: '100%', background: 'transparent', border: 'none', textAlign: 'left'}}>
+             <div className="sidebar-user-avatar">🚪</div>
+             <div className="sidebar-user-info">
+               <span className="name">{t('sign_out')}</span>
+             </div>
+          </button>
+        </div>
+      </aside>
+
+      <main className={`main-layout ${sidebarOpen && !mobileView && !isTablet() ? '' : 'expanded'}`}>
+        <header className="top-header">
+          <div className="header-left">
+            <button className="btn btn-primary" onClick={toggleSidebar} style={{width: '40px', height: '40px', padding: 0, flexShrink: 0}}>
+              ☰
+            </button>
+            <div className="breadcrumb desktop-only">
+              <span className="status-dot" style={{ background: connected ? '#22c55e' : '#ef4444' }}></span>
+              {connected ? 'System Online' : 'Connecting...'}
+            </div>
+          </div>
+          
+          <div className="header-actions">
+            <button className="theme-toggle-btn" onClick={toggleTheme}>
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
+            <div className="user-profile">
+              <div className="user-avatar">{initials}</div>
+              <div className="user-info desktop-only">
+                <span className="user-name">{user?.full_name || user?.username}</span>
+                <span className="user-role">Farmer Specialist</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="content-area">
+          <Outlet />
+        </div>
+      </main>
     </div>
   )
 }
+

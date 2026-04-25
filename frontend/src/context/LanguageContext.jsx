@@ -25,6 +25,11 @@ const translations = {
     recent_alerts: '🔔 Recent Alerts',
     all_clear: 'All Clear',
     damaged_valves: 'Damaged Valves',
+    plant_health: 'Plant Health',
+    my_orders: 'My Orders',
+    run_diagnostic: 'Run Diagnostic',
+    buy_treatment: 'Buy Treatment',
+    no_disease: 'No disease detected',
   },
   hi: {
     dashboard: 'डैशबोर्ड',
@@ -49,6 +54,11 @@ const translations = {
     recent_alerts: '📢 हाल की सूचनाएं',
     all_clear: 'सब ठीक है',
     damaged_valves: 'क्षतिग्रस्त वाल्व',
+    plant_health: 'फसल स्वास्थ्य',
+    my_orders: 'मेरे आदेश',
+    run_diagnostic: 'जांच शुरू करें',
+    buy_treatment: 'इलाज खरीदें',
+    no_disease: 'कोई बीमारी नहीं मिली',
   },
   mr: {
     dashboard: 'डॅशबोर्ड',
@@ -72,7 +82,12 @@ const translations = {
     water_usage_chart: '💦 पाण्याचा वापर - मागील ७ दिवस',
     recent_alerts: '📢 अलीकडील सूचना',
     all_clear: 'सर्व ठीक आहे',
-    damaged_valves: 'खराब झालेल्या झडपा',
+    damaged_valves: 'खराब झालेल्या झдपा',
+    plant_health: 'पीक आरोग्य',
+    my_orders: 'माझ्या ऑर्डर',
+    run_diagnostic: 'तपासणी करा',
+    buy_treatment: 'औषध खरेदी करा',
+    no_disease: 'कोणताही आजार आढळला नाही',
   },
   ta: {
     dashboard: 'முகப்பு',
@@ -97,6 +112,11 @@ const translations = {
     recent_alerts: '📢 சமீபத்திய விழிப்பூட்டல்கள்',
     all_clear: 'எல்லாம் சரி',
     damaged_valves: 'சேதமடைந்த வால்வுகள்',
+    plant_health: 'பயிர் ஆரோக்கியம்',
+    my_orders: 'எனது ஆர்டர்கள்',
+    run_diagnostic: 'பரிசோதனை செய்',
+    buy_treatment: 'மருந்து வாங்கு',
+    no_disease: 'நோய் எதுவும் இல்லை',
   },
   te: {
     dashboard: 'డ్యాష్‌బోర్డ్',
@@ -121,6 +141,11 @@ const translations = {
     recent_alerts: '📢 తాజా హెచ్చరికలు',
     all_clear: 'అంతా బాగుంది',
     damaged_valves: 'పాడైన వాల్వ్‌లు',
+    plant_health: 'పంట ఆరోగ్యం',
+    my_orders: 'నా ఆర్డర్లు',
+    run_diagnostic: 'పరీక్ష ప్రారంభించు',
+    buy_treatment: 'మందు కొనుగోలు చేయండి',
+    no_disease: 'ఏ వ్యాధి కనిపించలేదు',
   },
   kn: {
     dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
@@ -145,6 +170,11 @@ const translations = {
     recent_alerts: '🔔 ಇತ್ತೀಚಿನ ಎಚ್ಚರಿಕೆಗಳು',
     all_clear: 'ಎಲ್ಲವೂ ಸರಿಯಾಗಿದೆ',
     damaged_valves: 'ಹಾನಿಗೊಳಗಾದ ಕವಾಟಗಳು',
+    plant_health: 'ಬೆಳೆ ಆರೋಗ್ಯ',
+    my_orders: 'ನನ್ನ ಆದೇಶಗಳು',
+    run_diagnostic: 'ಪರೀಕ್ಷೆ ನಡೆಸಿ',
+    buy_treatment: 'ಚಿಕिತ್ಸೆ ಖರೀದಿಸಿ',
+    no_disease: 'ಯಾವುದೇ ಕಾಯಿಲೆ ಇಲ್ಲ',
   }
 }
 
