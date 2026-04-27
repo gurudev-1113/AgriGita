@@ -1,7 +1,14 @@
 flask
+flask-sqlalchemy
+flask-jwt-extended
+flask-bcrypt
 flask-cors
-gunicorn
+flask-socketio
+pymysql
+cryptography
 eventlet
+python-dotenv
+gunicorn
 numpy
 pandas
 scikit-learn
