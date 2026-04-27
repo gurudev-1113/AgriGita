@@ -23,5 +23,5 @@ class Alert(db.Model):
             'message': self.message,
             'is_read': self.is_read,
             'metadata': json.loads(self.metadata_json) if self.metadata_json else {},
-            'created_at': self.created_at.isoformat()
+            'created_at': self.created_at.isoformat() if self.created_at else datetime.utcnow().isoformat()
         }

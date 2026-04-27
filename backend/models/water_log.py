@@ -18,5 +18,5 @@ class WaterLog(db.Model):
             'flow_rate': self.flow_rate,
             'duration': self.duration,
             'volume': self.volume,
-            'timestamp': self.timestamp.isoformat()
+            'timestamp': self.timestamp.isoformat() if self.timestamp else datetime.utcnow().isoformat()
         }

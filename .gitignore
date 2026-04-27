@@ -1,0 +1,25 @@
+# Root ignore
+node_modules/
+venv/
+.venv/
+.env
+*.pyc
+__pycache__/
+dist/
+build/
+.expo/
+*.log
+
+# Frontend ignore
+frontend/node_modules/
+frontend/dist/
+
+# Mobile ignore
+mobile/node_modules/
+mobile/.expo/
+
+# Backend ignore
+backend/venv/
+backend/uploads/
+backend/__pycache__/
+backend/*.db

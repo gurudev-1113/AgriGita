@@ -27,6 +27,8 @@ def create_app():
     from routes.alerts import alerts_bp
     from routes.dashboard import dashboard_bp
     from routes.ai import ai_bp
+    from routes.detection import detection_bp
+    from routes.orders import orders_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(valves_bp, url_prefix='/api/valves')
@@ -35,6 +37,18 @@ def create_app():
     app.register_blueprint(alerts_bp, url_prefix='/api/alerts')
     app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
     app.register_blueprint(ai_bp, url_prefix='/api/ai')
+    app.register_blueprint(detection_bp, url_prefix='/api/detection')
+    app.register_blueprint(orders_bp, url_prefix='/api/orders')
+
+    @app.route('/')
+    def index():
+        return '''
+        <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+            <h1 style="color: #2e7d32;">AgriGita API</h1>
+            <p>The backend service is running successfully.</p>
+            <p>Please visit the frontend at <a href="http://localhost:3000">http://localhost:3000</a> to use the app.</p>
+        </div>
+        ''', 200
 
     @app.route('/api/health', methods=['GET'])
     def health():
