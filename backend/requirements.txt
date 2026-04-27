@@ -400,3 +400,9 @@ zict @ file:///work/perseverance-python-buildout/croot/zict_1728398062732/work
 zipp @ file:///home/task_176397781069023/conda-bld/zipp_1763977862013/work
 zope.interface @ file:///home/task_176233707661101/conda-bld/zope.interface_1762337129006/work
 zstandard @ file:///home/task_175818846949212/conda-bld/zstandard_1758189073015/work
+flask
+flask-cors
+gunicorn
+numpy
+pandas
+scikit-learn
