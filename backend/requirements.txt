@@ -1,6 +1,7 @@
 flask
 flask-cors
 gunicorn
+eventlet
 numpy
 pandas
 scikit-learn
