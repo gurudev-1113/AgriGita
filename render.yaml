@@ -16,19 +16,15 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
 
-  # Frontend Service (Static Site)
-  - type: web
+  # Frontend Service (Official Static Site type)
+  - type: static_site
     name: agrigita-frontend
-    env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     publishDir: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: agrigita-backend
-          property: host
+        value: https://agrigita-backend.onrender.com
 
 databases:
   - name: agrigita-db
