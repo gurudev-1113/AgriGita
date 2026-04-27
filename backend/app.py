@@ -1,10 +1,16 @@
 import eventlet
 eventlet.monkey_patch()
 
+import os
+import sys
+
+# Add the current directory to sys.path to handle various deployment scenarios
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from config import Config
-from extensions import db, jwt, bcrypt, cors, socketio
+from backend.config import Config
+from backend.extensions import db, jwt, bcrypt, cors, socketio
 from flask_socketio import join_room
 from datetime import datetime
 
@@ -20,15 +26,15 @@ def create_app():
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
     socketio.init_app(app)
 
-    from routes.auth import auth_bp
-    from routes.valves import valves_bp
-    from routes.wells import wells_bp
-    from routes.pipelines import pipelines_bp
-    from routes.alerts import alerts_bp
-    from routes.dashboard import dashboard_bp
-    from routes.ai import ai_bp
-    from routes.detection import detection_bp
-    from routes.orders import orders_bp
+    from backend.routes.auth import auth_bp
+    from backend.routes.valves import valves_bp
+    from backend.routes.wells import wells_bp
+    from backend.routes.pipelines import pipelines_bp
+    from backend.routes.alerts import alerts_bp
+    from backend.routes.dashboard import dashboard_bp
+    from backend.routes.ai import ai_bp
+    from backend.routes.detection import detection_bp
+    from backend.routes.orders import orders_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(valves_bp, url_prefix='/api/valves')
@@ -122,7 +128,7 @@ def create_app():
 
     @app.route('/api/admin/stats', methods=['GET'])
     def get_admin_stats():
-        from models.user import User
+        from backend.models.user import User
         users = User.query.all()
         user_list = [{'id': u.id, 'username': u.username, 'email': u.email, 'created': u.created_at.isoformat()} for u in users]
         return {
@@ -134,7 +140,7 @@ def create_app():
     @app.route('/api/admin/train', methods=['POST'])
     @jwt_required()
     def train_model():
-        from services.model_trainer import ModelTrainer
+        from backend.services.model_trainer import ModelTrainer
         trainer = ModelTrainer(app, db)
         try:
             results = trainer.run()
@@ -163,7 +169,7 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    from services.iot_simulator import start_iot_simulator
+    from backend.services.iot_simulator import start_iot_simulator
     start_iot_simulator(app, socketio, db)
     print('🚀 AgriGita API running on http://localhost:5000')
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

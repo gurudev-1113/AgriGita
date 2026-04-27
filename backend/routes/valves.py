@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db, socketio
-from models.valve import Valve
-from models.water_log import WaterLog
-from models.alert import Alert
+from backend.extensions import db, socketio
+from backend.models.valve import Valve
+from backend.models.water_log import WaterLog
+from backend.models.alert import Alert
 from datetime import datetime
 import random
 

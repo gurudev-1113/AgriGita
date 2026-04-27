@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.valve import Valve
-from models.well import Well
-from services.ai_engine import get_valve_suggestions, get_product_recommendations
+from backend.models.valve import Valve
+from backend.models.well import Well
+from backend.services.ai_engine import get_valve_suggestions, get_product_recommendations
 
 ai_bp = Blueprint('ai', __name__)
 

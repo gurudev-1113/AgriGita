@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models.pipeline import Pipeline
+from backend.extensions import db
+from backend.models.pipeline import Pipeline
 import json
 
 pipelines_bp = Blueprint('pipelines', __name__)

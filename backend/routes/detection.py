@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.disease_detector import detector
+from backend.services.disease_detector import detector
 import os
 import uuid
 from werkzeug.utils import secure_filename

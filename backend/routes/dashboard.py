@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models.valve import Valve
-from models.well import Well
-from models.pipeline import Pipeline
-from models.alert import Alert
-from models.water_log import WaterLog
+from backend.extensions import db
+from backend.models.valve import Valve
+from backend.models.well import Well
+from backend.models.pipeline import Pipeline
+from backend.models.alert import Alert
+from backend.models.water_log import WaterLog
 from sqlalchemy import func
 from datetime import datetime, timedelta
 

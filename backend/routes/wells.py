@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models.well import Well
+from backend.extensions import db
+from backend.models.well import Well
 
 wells_bp = Blueprint('wells', __name__)
 

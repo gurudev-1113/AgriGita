@@ -3,13 +3,13 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from app import app
-from extensions import db, bcrypt
-from models.user import User
-from models.valve import Valve
-from models.well import Well
-from models.pipeline import Pipeline
-from models.alert import Alert
-from models.water_log import WaterLog
+from backend.extensions import db, bcrypt
+from backend.models.user import User
+from backend.models.valve import Valve
+from backend.models.well import Well
+from backend.models.pipeline import Pipeline
+from backend.models.alert import Alert
+from backend.models.water_log import WaterLog
 from datetime import datetime, timedelta
 import random
 import json

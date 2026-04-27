@@ -9,11 +9,11 @@ def start_iot_simulator(app, socketio, db):
             while True:
                 eventlet.sleep(15)
                 try:
-                    from models.valve import Valve
-                    from models.well import Well
-                    from models.alert import Alert
-                    from models.water_log import WaterLog
-                    from models.user import User
+                    from backend.models.valve import Valve
+                    from backend.models.well import Well
+                    from backend.models.alert import Alert
+                    from backend.models.water_log import WaterLog
+                    from backend.models.user import User
 
                     active_valves = Valve.query.filter_by(status=True).all()
                     for valve in active_valves:

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models.alert import Alert
+from backend.extensions import db
+from backend.models.alert import Alert
 
 alerts_bp = Blueprint('alerts', __name__)
 

@@ -11,8 +11,8 @@ class ModelTrainer:
 
     def run(self):
         with self.app.app_context():
-            from models.valve import Valve
-            from models.water_log import WaterLog
+            from backend.models.valve import Valve
+            from backend.models.water_log import WaterLog
             
             print("🚀 Starting AI Model Training...")
             
