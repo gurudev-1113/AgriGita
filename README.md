@@ -2,8 +2,6 @@
 
 AgriGita is a professional, full-stack smart agriculture platform designed to optimize water usage and farm infrastructure management. It leverages IoT simulation, real-time data visualization, and AI-driven insights to help farmers monitor and control their fields efficiently.
 
-![AgriGita Dashboard Preview](https://via.placeholder.com/1200x600?text=AgriGita+Dashboard+Preview)
-
 ## 🚀 Key Features
 
 - **Real-time Monitoring**: Live dashboard tracking water usage, soil moisture, and infrastructure status.
